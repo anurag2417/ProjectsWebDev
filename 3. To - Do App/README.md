@@ -62,21 +62,12 @@ Works on all modern browsers that support:
 - ES6+ JavaScript
 - CSS Grid and Flexbox
 
-## Installation
-
-Simply open the HTML file in any modern web browser. No build process or server required!
-```bash
-# Clone the repository
-git clone <your-repo-url>
-
-# Open the file
-open index.html
-```
-
 ## Project Structure
 ```
 taskflow/
-├── index.html          # Single-file application
+├── index.html         
+├── style.css
+├── script.js
 └── README.md          # This file
 ```
 
