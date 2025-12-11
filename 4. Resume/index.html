@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Resume</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            padding: 0;
+            color: #e0e0e0;
+            line-height: 1.4;
+        }
+        
+        .resume-container {
+            width: 210mm;
+            height: 297mm;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .resume-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .sidebar {
+            width: 35%;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 40px 30px;
+            border-right: 3px solid #3b82f6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #334155;
+        }
+        
+        .profile-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        .profile-section h1 {
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .profile-section .title {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 28px;
+        }
+        
+        .sidebar-section h2 {
+            font-size: 13px;
+            color: #3b82f6;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sidebar-section h2::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 10px;
+            color: #cbd5e0;
+            padding: 6px;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+        
+        .contact-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .contact-item .icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        
+        .skill-item {
+            margin-bottom: 12px;
+        }
+        
+        .skill-name {
+            font-size: 10px;
+            color: #e2e8f0;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        .skill-bar {
+            height: 6px;
+            background: #1e293b;
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .skill-level {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            animation: fillBar 1.5s ease-out;
+        }
+        
+        @keyframes fillBar {
+            from { width: 0; }
+        }
+        
+        .certification-item {
+            background: rgba(59, 130, 246, 0.08);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #3b82f6;
+        }
+        
+        .certification-item strong {
+            display: block;
+            color: #ffffff;
+            font-size: 10px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+        
+        .certification-item span {
+            font-size: 9px;
+            color: #94a3b8;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 40px 35px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            color: #3b82f6;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #334155;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 6px;
+            height: 24px;
+            background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+            border-radius: 3px;
+        }
+        
+        .professional-summary {
+            font-size: 11px;
+            color: #cbd5e0;
+            line-height: 1.7;
+            background: rgba(59, 130, 246, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+        }
+        
+        .experience-item {
+            margin-bottom: 18px;
+            padding-left: 20px;
+            border-left: 2px solid #334155;
+            position: relative;
+        }
+        
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+        }
+        
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+        }
+        
+        .experience-item h3 {
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .company {
+            color: #3b82f6;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .date {
+            color: #64748b;
+            font-size: 10px;
+            white-space: nowrap;
+            font-style: italic;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+        
+        .experience-item ul {
+            list-style: none;
+            margin-top: 8px;
+        }
+        
+        .experience-item li {
+            color: #cbd5e0;
+            font-size: 10.5px;
+            margin-bottom: 5px;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.5;
+        }
+        
+        .experience-item li::before {
+            content: '▸';
+            color: #3b82f6;
+            position: absolute;
+            left: 0;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .education-item {
+            background: rgba(59, 130, 246, 0.05);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+            margin-bottom: 12px;
+        }
+        
+        .education-item h3 {
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .institution {
+            color: #3b82f6;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .education-details {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+        
+        @media print {
+            body {
+                background: #0f1419;
+                margin: 0;
+                padding: 0;
+            }
+            .resume-container {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <div class="sidebar">
+            <div class="profile-section">
+                <div class="profile-icon">[A]</div>
+                <h1>[YOUR NAME]</h1>
+                <div class="title">[Computer Science Student / Engineering Student]</div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h2>Contact</h2>
+                <div class="contact-item">
+                    <div class="icon">📧</div>
+                    <div>[email@example.com]</div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon">📱</div>
+                    <div>[+1-234-567-8900]</div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon">📍</div>
+                    <div>[City, State, Country]</div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon">🔗</div>
+                    <div>[linkedin.com/in/profile]</div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon">🌐</div>
+                    <div>[portfolio.com]</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h2>Certifications</h2>
+                <div class="certification-item">
+                    <strong>[Certification Name]</strong>
+                    <span>[Issuing Organization] • [Year]</span>
+                </div>
+                <div class="certification-item">
+                    <strong>[Certification Name]</strong>
+                    <span>[Issuing Organization] • [Year]</span>
+                </div>
+                <div class="certification-item">
+                    <strong>[Certification Name]</strong>
+                    <span>[Issuing Organization] • [Year]</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h2>Languages</h2>
+                <div class="skill-item">
+                    <div class="skill-name">[Language 1] - [Native/Fluent]</div>
+                    <div class="skill-bar">
+                        <div class="skill-level" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">[Language 2] - [Proficiency]</div>
+                    <div class="skill-bar">
+                        <div class="skill-level" style="width: 75%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="section">
+                <h2 class="section-title">Professional Summary</h2>
+                <p class="professional-summary">
+                    [Motivated first-year [Your Major] student at [University Name] with a strong passion for [area of interest]. Eager to apply theoretical knowledge to real-world projects and gain hands-on experience in [relevant field]. Quick learner with strong foundation in [relevant subjects/skills]. Seeking internship or entry-level opportunities to contribute fresh perspectives while developing practical skills in [industry/technology].]
+                </p>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Experience & Projects</h2>
+                
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div>
+                            <h3>[Project Name / Hackathon / Competition]</h3>
+                            <div class="company">[University / Organization] | [Personal Project]</div>
+                        </div>
+                        <div class="date">[MM/YYYY] – [MM/YYYY]</div>
+                    </div>
+                    <ul>
+                        <li>[Developed application/solution using technologies like [Tech 1], [Tech 2], and [Tech 3]]</li>
+                        <li>[Implemented key features such as [feature] resulting in [outcome/learning]]</li>
+                        <li>[Collaborated with team of X students to achieve [specific goal or result]]</li>
+                    </ul>
+                </div>
+                
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div>
+                            <h3>[Internship / Part-time Role / Volunteer Position]</h3>
+                            <div class="company">[Organization Name] | [Location]</div>
+                        </div>
+                        <div class="date">[MM/YYYY] – [MM/YYYY]</div>
+                    </div>
+                    <ul>
+                        <li>[Assisted with [task] while learning about [industry/technology]]</li>
+                        <li>[Contributed to [project/initiative] gaining experience in [skill area]]</li>
+                        <li>[Worked alongside professionals to understand [industry practice/workflow]]</li>
+                    </ul>
+                </div>
+                
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div>
+                            <h3>[Academic Project / Course Work]</h3>
+                            <div class="company">[University Course / Lab Project]</div>
+                        </div>
+                        <div class="date">[MM/YYYY] – [MM/YYYY]</div>
+                    </div>
+                    <ul>
+                        <li>[Built [project type] demonstrating understanding of [concept/technology]]</li>
+                        <li>[Applied coursework knowledge to solve [problem] using [methodology/tools]]</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Education</h2>
+                <div class="education-item">
+                    <h3>[Bachelor of Technology/Science] in [Computer Science/Engineering/Your Major]</h3>
+                    <div class="institution">[University Name] | [Location] • Expected [Graduation Year]</div>
+                    <div class="education-details">
+                        Current GPA: [X.XX/4.0] | First Year | Relevant Coursework: [Programming Fundamentals, Data Structures, Calculus, Physics, etc.]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Technical Skills</h2>
+                <div class="professional-summary" style="padding: 12px 15px;">
+                    <strong style="color: #ffffff; font-size: 10.5px;">Programming Languages:</strong> [Python, Java, C++, JavaScript, etc.]<br><br>
+                    <strong style="color: #ffffff; font-size: 10.5px;">Web Technologies:</strong> [HTML, CSS, React, Node.js, etc.]<br><br>
+                    <strong style="color: #ffffff; font-size: 10.5px;">Tools & Platforms:</strong> [Git, VS Code, Linux, MySQL, etc.]<br><br>
+                    <strong style="color: #ffffff; font-size: 10.5px;">Core Competencies:</strong> [Problem Solving, Team Collaboration, Quick Learning, Adaptability, Communication]
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
