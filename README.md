@@ -104,5 +104,5 @@ Currently improving JavaScript skills and building real-world projects to prepar
 Frontend Developer (Beginner)
 
 - GitHub: https://github.com/anurag2417  
-- LinkedIn: *(add your LinkedIn profile link)*
+- LinkedIn: www.linkedin.com/in/anurag-kumar-857637270
 
