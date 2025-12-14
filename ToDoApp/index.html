@@ -1,97 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TaskFlow</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="todoimage.png" type="image/png">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="todoimage.png" type="image/png" />
+  </head>
+  <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <div class="logo">
-            <div class="logo-icon">✓</div>
-            <span>TaskFlow</span>
-        </div>
-        
-        <div class="nav-center">
-            <span class="filter-label">Filter by Priority:</span>
-            <div class="priority-filters">
-                <button class="priority-btn priority-high" data-priority="high" title="High Priority"></button>
-                <button class="priority-btn priority-medium" data-priority="medium" title="Medium Priority"></button>
-                <button class="priority-btn priority-low" data-priority="low" title="Low Priority"></button>
-                <button class="priority-btn priority-none" data-priority="none" title="No Priority"></button>
-            </div>
-        </div>
+      <div class="logo">
+        <div class="logo-icon">✓</div>
+        <span>TaskFlow</span>
+      </div>
 
-        <div class="nav-actions">
-            <button class="btn btn-add" id="addTaskBtn">
-                <span>+</span>
-                <span>Add Task</span>
-            </button>
+      <div class="nav-center">
+        <span class="filter-label">Filter by Priority:</span>
+        <div class="priority-filters">
+          <button
+            class="priority-btn priority-high"
+            data-priority="high"
+            title="High Priority"
+          ></button>
+          <button
+            class="priority-btn priority-medium"
+            data-priority="medium"
+            title="Medium Priority"
+          ></button>
+          <button
+            class="priority-btn priority-low"
+            data-priority="low"
+            title="Low Priority"
+          ></button>
+          <button
+            class="priority-btn priority-none"
+            data-priority="none"
+            title="No Priority"
+          ></button>
         </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-delete" id="deleteAllBtn">
+          <span>🗑️</span>
+          <span>Delete All</span>
+        </button>
+        <button class="btn btn-add" id="addTaskBtn">
+          <span>+</span>
+          <span>Add Task</span>
+        </button>
+      </div>
     </nav>
 
-    <!-- Modal Form -->
-    <div class="modal" id="taskModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Add New Task</h2>
-                <button class="close-btn" id="closeModal">&times;</button>
-            </div>
-            
-            <form id="taskForm">
-                <div class="form-group">
-                    <label class="form-label">Task Name</label>
-                    <input type="text" class="form-input" id="taskNameInput" placeholder="Enter task name..." required>
-                </div>
+    <!-- Hero Section with Two Columns -->
+    <div class="hero-section">
+      <!-- Left Column: Task List with Notepad Background -->
+      <div class="left-column">
+        <div class="tasks-container">
+          <div class="stats" id="stats">0 completed / 0 total</div>
 
-                <div class="form-group">
-                    <label class="form-label">Priority</label>
-                    <div class="priority-select">
-                        <div class="priority-option high" data-priority="high">High</div>
-                        <div class="priority-option medium" data-priority="medium">Medium</div>
-                        <div class="priority-option low" data-priority="low">Low</div>
-                        <div class="priority-option none selected" data-priority="none">None</div>
-                    </div>
-                </div>
+          <ul id="taskList"></ul>
 
-                <div class="form-group">
-                    <label class="form-label">Due Date</label>
-                    <input type="date" class="form-input" id="dueDateInput">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Subtasks</label>
-                    <div class="subtask-container" id="subtaskContainer">
-                        <div class="subtask-input-group">
-                            <input type="text" class="form-input subtask-input" placeholder="Add a subtask...">
-                            <button type="button" class="btn-add-subtask">+</button>
-                        </div>
-                    </div>
-                    <ul class="subtask-list" id="subtaskList"></ul>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn btn-done" id="doneBtn">Done</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="container">
-        <div class="stats" id="stats">0 completed / 0 total</div>
-
-        <ul id="taskList"></ul>
-        
-        <div class="empty-state" id="emptyState">
+          <div class="empty-state" id="emptyState">
             <div class="empty-state-icon">📝</div>
             <p>No tasks yet. Click "Add Task" to get started!</p>
+          </div>
         </div>
+      </div>
+
+      <!-- Right Column: Task Form -->
+      <div class="right-column">
+        <div class="form-container" id="formContainer">
+          <div class="form-header">
+            <h2 class="form-title">Create New Task</h2>
+            <p class="form-subtitle">
+              Fill in the details below to add a new task
+            </p>
+          </div>
+
+          <form id="taskForm">
+            <div class="form-group">
+              <label class="form-label">Task Name</label>
+              <input
+                type="text"
+                class="form-input"
+                id="taskNameInput"
+                placeholder="What needs to be done?"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <div class="priority-select">
+                <div class="priority-option high" data-priority="high">
+                  <span>High</span>
+                  <span class="priority-dot"></span>
+                </div>
+                <div class="priority-option medium" data-priority="medium">
+                  <span>Medium</span>
+                  <span class="priority-dot"></span>
+                </div>
+                <div class="priority-option low" data-priority="low">
+                  <span>Low</span>
+                  <span class="priority-dot"></span>
+                </div>
+                <div class="priority-option none selected" data-priority="none">
+                  <span>None</span>
+                  <span class="priority-dot"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Due Date</label>
+              <input type="date" class="form-input" id="dueDateInput" />
+              <div class="form-hint">
+                Optional: Set a deadline for this task
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Subtasks</label>
+              <div class="subtask-container">
+                <div class="subtask-input-group">
+                  <input
+                    type="text"
+                    class="form-input subtask-input"
+                    placeholder="Add a subtask..."
+                  />
+                  <button type="button" class="btn-add-subtask">+ Add</button>
+                </div>
+              </div>
+              <ul class="subtask-list" id="subtaskList"></ul>
+              <div class="form-hint">
+                Add smaller steps to break down your task
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="clearFormBtn">
+                Clear
+              </button>
+              <button type="button" class="btn btn-primary" id="doneBtn">
+                Add Task
+              </button>
+            </div>
+          </form>
+
+          <div class="form-tips">
+            <h3>💡 Tips for better task management:</h3>
+            <ul>
+              <li>Use priorities to focus on what's important</li>
+              <li>Break large tasks into smaller subtasks</li>
+              <li>Set realistic due dates</li>
+              <li>Use the timer to track time spent</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

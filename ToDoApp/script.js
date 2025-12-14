@@ -25,17 +25,16 @@ let currentFilter = null;
 let selectedPriority = "none";
 let currentSubtasks = [];
 
-const taskModal = document.getElementById("taskModal");
-const addTaskBtn = document.getElementById("addTaskBtn");
-const closeModal = document.getElementById("closeModal");
 const taskForm = document.getElementById("taskForm");
 const taskNameInput = document.getElementById("taskNameInput");
 const doneBtn = document.getElementById("doneBtn");
+const clearFormBtn = document.getElementById("clearFormBtn");
 const taskList = document.getElementById("taskList");
 const emptyState = document.getElementById("emptyState");
 const stats = document.getElementById("stats");
 const priorityOptions = document.querySelectorAll(".priority-option");
 const priorityFilters = document.querySelectorAll(".priority-btn");
+const deleteAllBtn = document.getElementById("deleteAllBtn");
 const subtaskInput = document.querySelector(".subtask-input");
 const btnAddSubtask = document.querySelector(".btn-add-subtask");
 const subtaskList = document.getElementById("subtaskList");
@@ -44,23 +43,8 @@ const dueDateInput = document.getElementById("dueDateInput");
 // Timer tracking
 let timers = {};
 
-// Modal handling
-addTaskBtn.addEventListener("click", () => {
-  taskModal.classList.add("active");
-  taskNameInput.focus();
-});
-
-closeModal.addEventListener("click", () => {
-  taskModal.classList.remove("active");
-  resetForm();
-});
-
-taskModal.addEventListener("click", (e) => {
-  if (e.target === taskModal) {
-    taskModal.classList.remove("active");
-    resetForm();
-  }
-});
+// Initialize form with today's date
+dueDateInput.min = new Date().toISOString().split("T")[0];
 
 // Priority selection in form
 priorityOptions.forEach((option) => {
@@ -92,6 +76,11 @@ priorityFilters.forEach((btn) => {
 // Done button click
 doneBtn.addEventListener("click", () => {
   addTask();
+});
+
+// Clear form button
+clearFormBtn.addEventListener("click", () => {
+  resetForm();
 });
 
 // Subtask management
@@ -126,9 +115,9 @@ function renderSubtasks() {
     const li = document.createElement("li");
     li.className = "subtask-item";
     li.innerHTML = `
-                    <span>${subtask}</span>
-                    <button class="btn-remove-subtask">Remove</button>
-                `;
+      <span>${subtask}</span>
+      <button class="btn-remove-subtask">Remove</button>
+    `;
 
     const removeBtn = li.querySelector(".btn-remove-subtask");
     removeBtn.addEventListener("click", () => removeSubtask(index));
@@ -174,9 +163,22 @@ function addTask() {
     }, 1000),
   };
 
-  taskModal.classList.remove("active");
+  // Clear form
   resetForm();
+
+  // Update UI
   updateUI();
+
+  // Focus back on task name input
+  taskNameInput.focus();
+
+  // Scroll to the new task
+  setTimeout(() => {
+    const newTaskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+    if (newTaskElement) {
+      newTaskElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, 100);
 }
 
 function resetForm() {
@@ -262,15 +264,35 @@ function getDueDateStatus(dueDate) {
   }
 }
 
+function deleteTask(taskId) {
+  if (confirm("Are you sure you want to delete this task?")) {
+    // Stop timer if running
+    if (timers[taskId]) {
+      clearInterval(timers[taskId].interval);
+      delete timers[taskId];
+    }
+
+    // Remove task from array
+    tasks = tasks.filter((t) => t.id !== taskId);
+    updateUI();
+  }
+}
+
 function deleteAllTasks() {
-  if (confirm("Are you sure you want to delete all tasks?")) {
+  if (tasks.length === 0) {
+    alert("No tasks to delete!");
+    return;
+  }
+
+  if (confirm("Are you sure you want to delete ALL tasks?")) {
     // Clear all timers
-    Object.values(timers).forEach((timer) => {
-      clearInterval(timer.interval);
+    Object.keys(timers).forEach((taskId) => {
+      clearInterval(timers[taskId].interval);
     });
     timers = {};
     tasks = [];
     updateUI();
+    alert("All tasks have been deleted!");
   }
 }
 
@@ -310,48 +332,45 @@ function updateUI() {
       const dueDateStatus = getDueDateStatus(task.dueDate);
 
       li.innerHTML = `
-                        <div class="task-checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-text">${task.text}</div>
-                            <div class="task-meta">
-                                <span class="task-priority ${task.priority}">${
-        task.priority.charAt(0).toUpperCase() + task.priority.slice(1)
-      }</span>
-                                ${
-                                  dueDateStatus
-                                    ? `<span class="task-due-date ${dueDateStatus.status}">📅 ${dueDateStatus.text}</span>`
-                                    : ""
-                                }
-                                <span class="task-timer">
-                                    ⏱️ <span data-timer-id="${
-                                      task.id
-                                    }">${formatTime(task.timeSpent)}</span>
-                                    <button class="timer-btn ${
-                                      task.timerRunning ? "active" : ""
-                                    }" data-task-id="${task.id}">
-                                        ${task.timerRunning ? "Stop" : "Start"}
-                                    </button>
-                                </span>
-                            </div>
-                            ${
-                              task.subtasks.length > 0
-                                ? `
-                                <div class="task-subtasks">
-                                    ${task.subtasks
-                                      .map(
-                                        (sub) =>
-                                          `<div class="task-subtask-item">${sub}</div>`
-                                      )
-                                      .join("")}
-                                </div>
-                            `
-                                : ""
-                            }
-                        </div>
-                        <button class="task-delete-btn" data-delete-id="${
-                          task.id
-                        }">Delete</button>
-                    `;
+        <div class="task-checkbox"></div>
+        <div class="task-content">
+          <div class="task-text">${task.text}</div>
+          <div class="task-meta">
+            <span class="task-priority ${task.priority}">
+              ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+            </span>
+            ${
+              dueDateStatus
+                ? `<span class="task-due-date ${dueDateStatus.status}">📅 ${dueDateStatus.text}</span>`
+                : ""
+            }
+            <span class="task-timer">
+              ⏱️ <span data-timer-id="${task.id}">${formatTime(
+        task.timeSpent
+      )}</span>
+              <button class="timer-btn ${
+                task.timerRunning ? "active" : ""
+              }" data-task-id="${task.id}">
+                ${task.timerRunning ? "Stop" : "Start"}
+              </button>
+            </span>
+          </div>
+          ${
+            task.subtasks.length > 0
+              ? `
+            <div class="task-subtasks">
+              ${task.subtasks
+                .map((sub) => `<div class="task-subtask-item">${sub}</div>`)
+                .join("")}
+            </div>
+          `
+              : ""
+          }
+        </div>
+        <button class="task-delete-btn" data-delete-id="${
+          task.id
+        }">Delete</button>
+      `;
 
       const checkbox = li.querySelector(".task-checkbox");
       checkbox.addEventListener("click", () => toggleTask(task.id));
@@ -371,10 +390,20 @@ function updateUI() {
 
 function updateStats() {
   const completedCount = tasks.filter((t) => t.completed).length;
-  stats.textContent = `${completedCount} completed / ${tasks.length} total`;
+  const pendingCount = tasks.length - completedCount;
+  const totalTime = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
+
+  stats.innerHTML = `
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+      <div>📊 ${completedCount} completed / ${pendingCount} pending</div>
+      <div>⏱️ Total time: ${formatTime(totalTime)}</div>
+      <div>📝 ${tasks.length} total tasks</div>
+    </div>
+  `;
 }
 
+// Delete all button
 deleteAllBtn.addEventListener("click", deleteAllTasks);
 
-// Initialize
+// Initialize the UI
 updateUI();
