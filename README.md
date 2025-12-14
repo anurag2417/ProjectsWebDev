@@ -23,7 +23,7 @@ The projects demonstrate my understanding of core web fundamentals, clean UI des
 - Hosted using **GitHub Pages**
 
 🔗 **Live Main Page:**  
-https://anurag2417.github.io/your-repo-name/
+https://anurag2417.github.io/ProjectsWebDev/
 
 ---
 
@@ -37,7 +37,7 @@ A personal portfolio website showcasing my skills and projects.
 - Beginner-friendly content
 
 🔗 **Live Demo:**  
-https://anurag2417.github.io/your-repo-name/Portfolio/
+https://anurag2417.github.io/ProjectsWebDev/Portfolio/index.html
 
 ---
 
@@ -49,7 +49,7 @@ A resume landing page designed with readability and ATS compatibility in mind.
 - Easy to scan for recruiters
 
 🔗 **Live Demo:**  
-https://anurag2417.github.io/your-repo-name/Resume/
+https://anurag2417.github.io/ProjectsWebDev/Resume/index.html
 
 ---
 
@@ -62,7 +62,7 @@ A simple task management application built with vanilla JavaScript.
 - Demonstrates DOM manipulation
 
 🔗 **Live Demo:**  
-https://anurag2417.github.io/your-repo-name/ToDoApp/
+https://anurag2417.github.io/ProjectsWebDev/ToDoApp/index.html
 
 ---
 
@@ -74,7 +74,7 @@ A static tribute page created as a frontend practice project.
 - Focus on structure and styling
 
 🔗 **Live Demo:**  
-https://anurag2417.github.io/your-repo-name/TributePage/
+https://anurag2417.github.io/ProjectsWebDev/TributePage/index.html
 
 ---
 
