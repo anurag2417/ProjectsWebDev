@@ -6,9 +6,13 @@ The projects demonstrate my understanding of core web fundamentals, clean UI des
 ## 📂 Repository Structure
 
 ├── Portfolio
+
 ├── Resume
+
 ├── ToDoApp
+
 ├── TributePage
+
 ├── index.html
 
 
