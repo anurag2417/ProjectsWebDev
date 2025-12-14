@@ -15,12 +15,13 @@ body {
   padding: 0;
   color: #e0e0e0;
   line-height: 1.4;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .resume-container {
-  width: 210mm;
-  height: 297mm;
-  margin: 20px auto;
+  width: 100%;
+  min-height: 100vh;
   background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
   box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
   display: flex;
@@ -55,6 +56,7 @@ body {
   border-right: 3px solid #3b82f6;
   position: relative;
   z-index: 1;
+  min-height: 100vh;
 }
 
 .profile-section {
@@ -67,7 +69,6 @@ body {
 .profile-icon {
   width: 100px;
   height: 100px;
-  /* background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); */
   border-radius: 50%;
   margin: 0 auto 15px;
   display: flex;
@@ -82,10 +83,8 @@ body {
 img {
   width: 100px;
   height: 100px;
-  /* background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); */
   border: #3b82f6 solid 2px;
   border-radius: 50%;
-  /* margin: 0 auto 15px;  */
 }
 
 .profile-section h1 {
@@ -365,5 +364,14 @@ img {
     height: 297mm;
     margin: 0;
     box-shadow: none;
+  }
+}
+
+/* Responsive adjustments for larger screens */
+@media (min-width: 1200px) {
+  .resume-container {
+    max-width: 210mm;
+    margin: 20px auto;
+    min-height: 297mm;
   }
 }
