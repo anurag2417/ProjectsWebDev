@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rank Seekers | Complete Dashboard</title>
+<title>Rank Seekers | Enhanced Dashboard</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -56,6 +56,7 @@
     .text-sm { font-size: 0.85rem; }
     .text-xs { font-size: 0.75rem; }
     .text-muted { color: var(--text-muted); }
+    .font-bold { font-weight: 700; }
     
     /* Buttons */
     .btn {
@@ -70,9 +71,10 @@
     .btn-outline:hover { border-color: var(--primary); color: var(--text-main); background: rgba(99, 102, 241, 0.1); }
     .btn-danger-soft { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
     .btn-danger-soft:hover { background: rgba(239, 68, 68, 0.25); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); }
 
     /* Inputs */
-    input, select, textarea {
+    input[type="text"], select, textarea {
         background: var(--surface-color); border: 1px solid var(--surface-border);
         padding: 0.8rem 1rem; border-radius: 8px; color: white; width: 100%;
         outline: none; transition: var(--transition);
@@ -132,6 +134,21 @@
     .chip-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
     .info-chip { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px; color: var(--text-muted); }
 
+    /* MISTAKES PANEL */
+    .mistakes-panel {
+        background: linear-gradient(145deg, rgba(239, 68, 68, 0.05) 0%, var(--surface-color) 100%);
+        border: 1px solid var(--surface-border);
+        margin-top: 30px;
+    }
+    .stat-box {
+        background: rgba(255,255,255,0.03); 
+        padding: 15px; 
+        border-radius: 8px;
+        border: 1px solid transparent;
+        transition: var(--transition);
+    }
+    .stat-box:hover { border-color: var(--surface-border); background: rgba(255,255,255,0.05); }
+
     /* RIGHT SIDEBAR */
     .sidebar-section { margin-bottom: 25px; }
     .profile-mini { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
@@ -170,11 +187,131 @@
     .p-btn.answered { background: var(--success); color: white; }
     .p-btn.bookmarked::after { content: '★'; position: absolute; top: -5px; right: -5px; color: #fbbf24; font-size: 10px; }
 
+    /* =========================================
+       NEW INSTRUCTIONS SCREEN STYLES
+       ========================================= */
+    #screen-instructions {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 100;
+        display: none; /* toggled by JS */
+    }
+    #screen-instructions.active { display: flex; align-items: center; justify-content: center; }
+
+    /* "Alive" Background */
+    .ins-backdrop {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(15, 17, 26, 0.85);
+        backdrop-filter: blur(8px);
+        z-index: 1;
+        overflow: hidden;
+    }
+    .ins-glow-orb {
+        position: absolute; width: 400px; height: 400px;
+        background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(0,0,0,0) 70%);
+        border-radius: 50%;
+        animation: floatOrb 10s infinite alternate ease-in-out;
+    }
+    @keyframes floatOrb {
+        0% { top: 10%; left: 10%; transform: scale(1); }
+        100% { top: 40%; left: 60%; transform: scale(1.2); }
+    }
+
+    /* Modal Layout */
+    .ins-modal {
+        position: relative; z-index: 2; width: 1000px; max-width: 95%; height: 85vh;
+        background: var(--surface-color); border: 1px solid var(--surface-border);
+        border-radius: 16px; overflow: hidden;
+        display: grid; grid-template-columns: 280px 1fr;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Sidebar */
+    .ins-sidebar {
+        background: rgba(0,0,0,0.2); border-right: 1px solid var(--surface-border);
+        padding: 25px; display: flex; flex-direction: column;
+    }
+    .topic-list { list-style: none; margin-top: 15px; }
+    .topic-list li {
+        padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+        color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; gap: 10px;
+    }
+    .topic-list li::before { content: '•'; color: var(--primary); font-size: 1.2rem; }
+    .topic-list li:last-child { border-bottom: none; }
+
+    /* Main Content */
+    .ins-main { padding: 30px; overflow-y: auto; position: relative; }
+    
+    /* Pattern Cards */
+    .pattern-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+    .pat-card {
+        background: var(--surface-hover); border: 1px solid var(--surface-border);
+        border-radius: 8px; padding: 15px; text-align: center;
+    }
+    .pat-icon { font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; }
+
+    /* Accordion */
+    .accordion { margin-bottom: 25px; border: 1px solid var(--surface-border); border-radius: 8px; overflow: hidden; }
+    .acc-item { border-bottom: 1px solid var(--surface-border); background: rgba(255,255,255,0.02); }
+    .acc-item:last-child { border-bottom: none; }
+    .acc-header {
+        padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+        font-weight: 600; font-size: 0.95rem; transition: background 0.2s;
+    }
+    .acc-header:hover { background: rgba(255,255,255,0.05); }
+    .acc-body {
+        max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;
+        background: rgba(0,0,0,0.1); padding: 0 15px; color: var(--text-muted); font-size: 0.9rem;
+    }
+    .acc-item.active .acc-body { max-height: 200px; padding: 15px; border-top: 1px solid var(--surface-border); }
+    .acc-item.active .acc-header i { transform: rotate(180deg); }
+
+    /* =========================================
+       AGREEMENT CHECKBOX FIX
+       ========================================= */
+    .agreement-container {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 1px solid transparent;
+        transition: var(--transition);
+    }
+    .agreement-container:hover {
+        border-color: var(--surface-border);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .checkbox-label {
+        display: flex;
+        gap: 12px;
+        cursor: pointer;
+        align-items: center;
+        user-select: none;
+    }
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--primary); /* Makes the checkmark purple */
+        margin: 0;
+    }
+
+    /* Feedback Link */
+    .feedback-link {
+        position: absolute; bottom: 20px; right: 20px; z-index: 10;
+        display: flex; gap: 15px; font-size: 0.8rem;
+    }
+    .feedback-link a { color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 5px; opacity: 0.6; transition: 0.2s; }
+    .feedback-link a:hover { opacity: 1; color: var(--primary); }
+
     /* Responsive */
     @media (max-width: 1024px) {
         .dashboard-layout { grid-template-columns: 1fr; }
         .quiz-layout { grid-template-columns: 1fr; }
         .sidebar { display: none; }
+    }
+    @media (max-width: 768px) {
+        .ins-modal { grid-template-columns: 1fr; height: 95vh; }
+        .ins-sidebar { display: none; } /* Hide topics on mobile to save space */
+        .pattern-grid { grid-template-columns: 1fr; }
     }
 </style>
 </head>
@@ -236,7 +373,47 @@
                         <i class="fa-solid fa-clipboard-question" style="font-size: 3rem; color: var(--surface-border);"></i>
                         <h3 style="margin-top: 10px;">No tests found</h3>
                     </div>
-                </div>
+
+                    <div class="card mistakes-panel" id="mistakes-review-panel">
+                        <div class="flex-between" style="margin-bottom: 20px;">
+                            <div>
+                                <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning); margin-right: 8px;"></i> Mistakes to Review</h3>
+                                <p class="text-muted text-sm">Review pending errors to improve your score.</p>
+                            </div>
+                            <div style="text-align: right; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px;">
+                                <div class="text-xs text-muted" style="text-transform: uppercase; font-weight: 700;">From Last Test</div>
+                                <div class="font-bold" id="mis-last-test-name" style="font-size: 0.9rem;">--</div>
+                                <div class="text-xs text-muted"><span id="mis-last-count" style="color:var(--danger); font-weight:700;">0</span> mistakes</div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                            <div class="stat-box">
+                                <div class="flex-between">
+                                    <div class="text-muted text-xs uppercase font-bold">Wrong Answers Pending</div>
+                                    <i class="fa-solid fa-circle-xmark" style="color:var(--danger)"></i>
+                                </div>
+                                <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-top: 5px;" id="mis-total-wrong">0</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="flex-between">
+                                    <div class="text-muted text-xs uppercase font-bold">Bookmarked</div>
+                                    <i class="fa-solid fa-bookmark" style="color:var(--info)"></i>
+                                </div>
+                                <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-top: 5px;" id="mis-total-book">0</div>
+                            </div>
+                        </div>
+
+                        <div class="flex-between" style="gap: 15px;">
+                            <button class="btn btn-danger-soft" style="flex: 1;" onclick="app.reviewGlobalMistakes()">
+                                <i class="fa-solid fa-rotate-left"></i> Review Wrong
+                            </button>
+                            <button class="btn btn-outline" style="flex: 1;" onclick="app.reviewGlobalBookmarks()">
+                                <i class="fa-solid fa-book-open-reader"></i> Revision Mode
+                            </button>
+                        </div>
+                    </div>
+                    </div>
 
                 <aside class="dashboard-side">
                     
@@ -350,22 +527,92 @@
                 </div>
             </div>
         </section>
+    </div>
 
-        <section id="screen-instructions" class="rs-screen" style="margin-top: 40px;">
-            <div class="card" style="max-width: 800px; margin: 0 auto;">
-                <h2 id="ins-title" style="margin-bottom: 10px;">Test Instructions</h2>
-                <div class="info-chip" id="ins-subtitle" style="display:inline-flex; background:rgba(99,102,241,0.1); color:var(--primary); margin-bottom: 20px;"></div>
+    <section id="screen-instructions">
+        <div class="ins-backdrop">
+            <div class="ins-glow-orb"></div>
+        </div>
+        
+        <div class="feedback-link">
+            <a href="#"><i class="fa-solid fa-flag"></i> Report an issue</a>
+            <a href="#"><i class="fa-solid fa-comment-dots"></i> Feedback</a>
+        </div>
+
+        <div class="ins-modal">
+            <aside class="ins-sidebar">
+                <h3 style="font-size: 1.1rem; color: var(--text-main);"><i class="fa-solid fa-list-check" style="color:var(--primary)"></i> Topics Included</h3>
+                <p class="text-xs text-muted" style="margin-top: 5px;">This mock covers the following key concepts:</p>
                 
-                <ul style="list-style: none; margin-bottom: 20px; line-height: 2;">
-                    <li><i class="fa-solid fa-clock" style="color:var(--primary); width:20px;"></i> Duration: <strong><span id="ins-duration">--</span> mins</strong></li>
-                    <li><i class="fa-solid fa-list" style="color:var(--primary); width:20px;"></i> Questions: <strong><span id="ins-qcount">--</span></strong></li>
-                    <li><i class="fa-solid fa-check" style="color:var(--success); width:20px;"></i> Correct: <strong>+4 marks</strong></li>
-                    <li><i class="fa-solid fa-xmark" style="color:var(--danger); width:20px;"></i> Incorrect: <strong>-1 mark</strong></li>
-                    <li><i class="fa-solid fa-rotate-left" style="color:var(--warning); width:20px;"></i> <strong>Revision Mode:</strong> Scores here are not saved to leaderboard.</li>
-                </ul>
+                <ul class="topic-list" id="ins-topic-list">
+                    </ul>
 
-                <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:8px; margin-bottom: 25px;">
-                    <label style="display: flex; gap: 10px; cursor: pointer; align-items: center;">
+                <div style="margin-top: auto;">
+                    <div class="card" style="padding: 15px; border: 1px dashed var(--surface-border); background: transparent;">
+                        <div class="text-xs text-muted font-bold uppercase">Difficulty</div>
+                        <div id="ins-badge-diff" style="font-size: 1.2rem; font-weight: 800; margin-top: 5px;">MEDIUM</div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="ins-main">
+                <h2 id="ins-title" style="margin-bottom: 5px;">Test Title</h2>
+                <div class="text-muted text-sm" style="margin-bottom: 25px;">
+                    <span id="ins-subtitle">Subject</span> • <span id="ins-duration">00</span> Mins • <span id="ins-qcount">00</span> Questions
+                </div>
+
+                <h4 class="text-muted text-xs uppercase font-bold" style="margin-bottom: 10px;">Question Pattern</h4>
+                <div class="pattern-grid">
+                    <div class="pat-card">
+                        <div class="pat-icon"><i class="fa-regular fa-circle-check"></i></div>
+                        <div class="text-sm font-bold">Single Correct</div>
+                        <div class="text-xs text-muted">+4, -1 Mark</div>
+                    </div>
+                    <div class="pat-card">
+                        <div class="pat-icon"><i class="fa-solid fa-list-ol"></i></div>
+                        <div class="text-sm font-bold">Numerical</div>
+                        <div class="text-xs text-muted">No Negative</div>
+                    </div>
+                    <div class="pat-card">
+                        <div class="pat-icon"><i class="fa-solid fa-check-double"></i></div>
+                        <div class="text-sm font-bold">Multiple Choice</div>
+                        <div class="text-xs text-muted">Partial Marking</div>
+                    </div>
+                </div>
+
+                <h4 class="text-muted text-xs uppercase font-bold" style="margin-bottom: 10px;">Rules & Guidelines</h4>
+                <div class="accordion">
+                    <div class="acc-item active">
+                        <div class="acc-header" onclick="app.toggleAccordion(this)">
+                            <span><i class="fa-solid fa-marker" style="width: 20px;"></i> Marking Scheme</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="acc-body">
+                            <p style="padding: 10px 0;">Correct Answer: <strong>+4 marks</strong>.<br>Incorrect Answer: <strong>-1 mark</strong> (Negative Marking).<br>Unanswered: <strong>0 marks</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <div class="acc-header" onclick="app.toggleAccordion(this)">
+                            <span><i class="fa-solid fa-calculator" style="width: 20px;"></i> Calculator & Rough Work</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="acc-body">
+                            <p style="padding: 10px 0;">Physical calculators are strictly prohibited. Use the virtual calculator provided if applicable. Use blank sheets for rough work.</p>
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <div class="acc-header" onclick="app.toggleAccordion(this)">
+                            <span><i class="fa-solid fa-lightbulb" style="width: 20px;"></i> Quick Strategy</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="acc-body">
+                            <p style="padding: 10px 0;">Attempt easier questions first. Don't spend more than 3 minutes on a single question. Use the "Save for Later" feature effectively.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agreement-container">
+                    <label class="checkbox-label">
                         <input type="checkbox" id="agree-chk">
                         <span class="text-sm">I have read the instructions and agree to the exam rules.</span>
                     </label>
@@ -375,9 +622,10 @@
                     <button class="btn btn-outline" onclick="app.showScreen('dashboard')">Cancel</button>
                     <button class="btn btn-primary" id="btn-start-test" disabled style="min-width: 150px;">Start Now</button>
                 </div>
-            </div>
-        </section>
-
+            </main>
+        </div>
+    </section>
+    <div class="container">
         <section id="screen-quiz" class="rs-screen">
             <div class="quiz-layout">
                 <main class="card" style="display: flex; flex-direction: column; min-height: 550px;">
@@ -455,13 +703,12 @@
                 </div>
             </div>
         </section>
-
     </div>
 
     <script>
         // --- DATA MOCK ---
         const initialData = [
-            { id: 1, title: "Kinematics - Full Chapter", subject: "physics", difficulty: "medium", duration: 15, totalQuestions: 5, attemptsLeft: 2, status: "pending", bestScore: null, score: 0, bookmarks: [], wrongIndices: [], questions: [ { q: "Displacement is proportional to:", options: ["t", "t²", "t³", "√t"], correct: 1 }, { q: "Which is a vector?", options: ["Speed", "Distance", "Displacement", "Mass"], correct: 2 }, { q: "Slope of V-T graph is:", options: ["Distance", "Acceleration", "Speed", "Position"], correct: 1 }, { q: "40m in 4s. Avg speed?", options: ["12 m/s", "8 m/s", "10 m/s", "100 m/s"], correct: 2 }, { q: "Initial velocity from rest?", options: ["0", "9.8", "Infinity", "Depends"], correct: 0 } ] },
+            { id: 1, title: "Kinematics - Full Chapter", subject: "physics", difficulty: "medium", duration: 15, totalQuestions: 5, attemptsLeft: 1, status: "completed", bestScore: 12, score: 12, bookmarks: [2], wrongIndices: [1, 3], questions: [ { q: "Displacement is proportional to:", options: ["t", "t²", "t³", "√t"], correct: 1 }, { q: "Which is a vector?", options: ["Speed", "Distance", "Displacement", "Mass"], correct: 2 }, { q: "Slope of V-T graph is:", options: ["Distance", "Acceleration", "Speed", "Position"], correct: 1 }, { q: "40m in 4s. Avg speed?", options: ["12 m/s", "8 m/s", "10 m/s", "100 m/s"], correct: 2 }, { q: "Initial velocity from rest?", options: ["0", "9.8", "Infinity", "Depends"], correct: 0 } ] },
             { id: 2, title: "Atomic Structure Mock", subject: "chemistry", difficulty: "hard", duration: 20, totalQuestions: 5, attemptsLeft: 3, status: "pending", bestScore: null, score: 0, bookmarks: [], wrongIndices: [], questions: [ { q: "Nucleus contains:", options: ["Electrons", "Protons+Neutrons", "Electrons+Protons", "Neutrons"], correct: 1 }, { q: "Least mass?", options: ["Proton", "Neutron", "Electron", "Alpha"], correct: 2 }, { q: "Isotopes same in:", options: ["Neutrons", "Protons", "Mass", "None"], correct: 1 }, { q: "Max electrons in M shell:", options: ["8", "18", "32", "2"], correct: 1 }, { q: "Rutherford proved:", options: ["Electron", "Neutron", "Nucleus", "Orbit"], correct: 2 } ] },
             { id: 3, title: "Calculus Fundamentals", subject: "maths", difficulty: "easy", duration: 30, totalQuestions: 5, attemptsLeft: 3, status: "pending", bestScore: null, score: 0, bookmarks: [], wrongIndices: [], questions: [ { q: "Derivative of x²:", options: ["x", "2x", "x/2", "2"], correct: 1 }, { q: "Reverse of Integration:", options: ["Differentiation", "Limits", "Functions", "None"], correct: 0 }, { q: "limit sin(x)/x at 0:", options: ["0", "1", "Inf", "NaN"], correct: 1 }, { q: "d/dx(sin x):", options: ["cos x", "-cos x", "tan x", "sec x"], correct: 0 }, { q: "Slope of y=x at 1:", options: ["0", "1", "2", "-1"], correct: 1 } ] }
         ];
@@ -493,7 +740,7 @@
             profileChart: null,
 
             init: function() {
-                const storedData = localStorage.getItem('rs_data_v2');
+                const storedData = localStorage.getItem('rs_data_v3');
                 this.data = storedData ? JSON.parse(storedData) : JSON.parse(JSON.stringify(initialData));
                 
                 const storedDoubts = localStorage.getItem('rs_doubts');
@@ -505,21 +752,30 @@
             },
 
             saveData: function() { 
-                localStorage.setItem('rs_data_v2', JSON.stringify(this.data)); 
+                localStorage.setItem('rs_data_v3', JSON.stringify(this.data)); 
                 localStorage.setItem('rs_doubts', JSON.stringify(this.doubts));
             },
             
             resetSystem: function() {
                 if(confirm("Reset entire system?")) {
-                    localStorage.removeItem('rs_data_v2');
+                    localStorage.removeItem('rs_data_v3');
                     localStorage.removeItem('rs_doubts');
                     location.reload();
                 }
             },
 
+            // --- FIXED SHOW SCREEN FUNCTION ---
             showScreen: function(name) {
+                // 1. Hide all standard screens
                 document.querySelectorAll('.rs-screen').forEach(s => s.classList.remove('active'));
-                document.getElementById('screen-' + name).classList.add('active');
+                
+                // 2. FORCE CLOSE the instructions modal (This is the fix)
+                document.getElementById('screen-instructions').classList.remove('active');
+
+                // 3. Show the requested screen
+                const target = document.getElementById('screen-' + name);
+                if(target) target.classList.add('active');
+                
                 window.scrollTo(0, 0);
                 if (name === 'dashboard') this.renderDashboard();
             },
@@ -580,7 +836,88 @@
                         </div>`;
                 });
                 document.getElementById('empty-state').style.display = visibleCount === 0 ? 'block' : 'none';
+                
+                this.updateMistakesPanel();
                 this.updateSidebarStats();
+            },
+
+            updateMistakesPanel: function() {
+                let totalWrong = 0;
+                let totalBookmarks = 0;
+                let lastTest = null;
+
+                this.data.forEach(t => {
+                    if(t.status === 'completed') {
+                        lastTest = t; 
+                        if(t.wrongIndices) totalWrong += t.wrongIndices.length;
+                    }
+                    if(t.bookmarks) totalBookmarks += t.bookmarks.length;
+                });
+
+                document.getElementById('mis-total-wrong').innerText = totalWrong;
+                document.getElementById('mis-total-book').innerText = totalBookmarks;
+                
+                if(lastTest) {
+                    document.getElementById('mis-last-test-name').innerText = lastTest.title;
+                    document.getElementById('mis-last-count').innerText = lastTest.wrongIndices ? lastTest.wrongIndices.length : 0;
+                } else {
+                    document.getElementById('mis-last-test-name').innerText = "No tests taken";
+                }
+            },
+
+            // --- AGGREGATE REVIEW FUNCTIONS ---
+            reviewGlobalMistakes: function() {
+                const allMistakes = [];
+                this.data.forEach(t => {
+                    if(t.status === 'completed' && t.wrongIndices && t.wrongIndices.length > 0) {
+                        t.wrongIndices.forEach(idx => {
+                            allMistakes.push(t.questions[idx]);
+                        });
+                    }
+                });
+
+                if(allMistakes.length === 0) return alert("Great job! No pending mistakes found.");
+
+                const reviewTest = {
+                    id: 999,
+                    title: "Mistakes Review",
+                    subject: "Mixed",
+                    difficulty: "Adaptive",
+                    duration: 20,
+                    questions: allMistakes,
+                    bookmarks: []
+                };
+                
+                if(confirm(`Ready to review ${allMistakes.length} incorrect questions from past tests?`)) {
+                    quiz.start(reviewTest, true);
+                }
+            },
+
+            reviewGlobalBookmarks: function() {
+                const allBookmarks = [];
+                this.data.forEach(t => {
+                    if(t.bookmarks && t.bookmarks.length > 0) {
+                        t.bookmarks.forEach(idx => {
+                            allBookmarks.push(t.questions[idx]);
+                        });
+                    }
+                });
+
+                if(allBookmarks.length === 0) return alert("No questions bookmarked yet.");
+
+                const reviewTest = {
+                    id: 998,
+                    title: "Bookmarks Revision",
+                    subject: "Mixed",
+                    difficulty: "Adaptive",
+                    duration: 30,
+                    questions: allBookmarks,
+                    bookmarks: [] // reset for this session
+                };
+
+                if(confirm(`Start revision of ${allBookmarks.length} bookmarked questions?`)) {
+                    quiz.start(reviewTest, true);
+                }
             },
 
             updateSidebarStats: function() {
@@ -589,7 +926,7 @@
                 
                 let totalObtained = 0, totalMax = 0;
                 completed.forEach(t => { totalObtained += t.score; totalMax += t.totalQuestions * 4; });
-                const acc = totalMax > 0 ? Math.round((totalObtained / totalMax) * 100) : 0;
+                const acc = totalMax > 0 ? Math.round((Math.max(0, totalObtained) / totalMax) * 100) : 0;
                 document.getElementById('user-accuracy').innerText = acc + '%';
 
                 const solvedDoubts = this.doubts.filter(d => d.status === 'Solved').length;
@@ -684,6 +1021,22 @@
                 document.getElementById('ins-duration').innerText = test.duration;
                 document.getElementById('ins-qcount').innerText = test.totalQuestions;
                 
+                // NEW: Populate Dynamic Topics based on subject
+                const topicMap = {
+                    'physics': ['Newton\'s Laws', 'Kinematics 1D & 2D', 'Work Power Energy', 'Friction'],
+                    'chemistry': ['Atomic Structure', 'Mole Concept', 'Periodic Properties', 'Chemical Bonding'],
+                    'maths': ['Calculus Basics', 'Limits & Derivatives', 'Functions', 'Trigonometry']
+                };
+                
+                const topics = topicMap[test.subject] || ['General Concepts', 'Problem Solving', 'Critical Thinking'];
+                const topicList = document.getElementById('ins-topic-list');
+                topicList.innerHTML = topics.map(t => `<li>${t}</li>`).join('');
+
+                // Update Difficulty Badge
+                const badge = document.getElementById('ins-badge-diff');
+                badge.innerText = test.difficulty;
+                badge.style.color = test.difficulty === 'easy' ? 'var(--success)' : test.difficulty === 'medium' ? 'var(--warning)' : 'var(--danger)';
+
                 const chk = document.getElementById('agree-chk');
                 const btn = document.getElementById('btn-start-test');
                 chk.checked = false; btn.disabled = true;
@@ -691,6 +1044,11 @@
                 btn.onclick = () => quiz.start(test, false);
 
                 this.showScreen('instructions');
+            },
+
+            toggleAccordion: function(header) {
+                const item = header.parentElement;
+                item.classList.toggle('active');
             },
 
             revisionMode: function(id) {
